@@ -3,45 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather Dashboard (India)</title>
+  <title>Weather Dashboard (Demo - India)</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #3a7bd5, #00d2ff);
-      color: white;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #74ABE2, #5563DE);
+      color: #fff;
       text-align: center;
       padding: 20px;
     }
     .container {
-      max-width: 600px;
-      margin: 0 auto;
       background: rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
-      padding: 20px;
+      border-radius: 15px;
+      padding: 25px;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     input {
       padding: 10px;
       width: 70%;
-      border-radius: 5px;
       border: none;
+      border-radius: 5px;
       outline: none;
       margin-bottom: 10px;
     }
     button {
       padding: 10px 15px;
+      background: #ffd166;
       border: none;
       border-radius: 5px;
-      background: #ffb703;
-      color: #000;
       cursor: pointer;
       font-weight: bold;
+      transition: 0.3s;
     }
     button:hover {
-      background: #ffca3a;
+      background: #ffe29a;
     }
     .forecast {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       flex-wrap: wrap;
       margin-top: 15px;
     }
@@ -50,116 +51,68 @@
       border-radius: 8px;
       padding: 10px;
       margin: 5px;
-      width: 100px;
-    }
-    .tests {
-      margin-top: 20px;
-      text-align: left;
-      font-size: 14px;
-      background: rgba(0,0,0,0.4);
-      padding: 10px;
-      border-radius: 5px;
+      width: 120px;
     }
   </style>
 </head>
 <body>
-
   <div class="container">
-    <h1>🇮🇳 Weather Dashboard (Indian Cities)</h1>
-
-    <!-- Search box -->
+    <h1>🇮🇳 Weather Dashboard (Demo)</h1>
     <input type="text" id="cityInput" placeholder="Enter Indian city (e.g., Mumbai, Chennai)">
-    <button onclick="getWeather()">Search</button>
+    <button onclick="showWeather()">Show Weather</button>
 
-    <!-- Weather display -->
     <h2 id="cityName">New Delhi</h2>
     <h3 id="temperature">-- °C</h3>
     <p id="description">--</p>
 
     <h3>5-Day Forecast</h3>
     <div id="forecast" class="forecast"></div>
-
-    <!-- JS function testing -->
-    <div class="tests">
-      <h3>JS Test Results</h3>
-      <button onclick="runTests()">Run JS Tests</button>
-      <pre id="testResults"></pre>
-    </div>
   </div>
 
   <script>
-    const API_KEY = "YOUR_API_KEY_HERE";  // Replace with your OpenWeatherMap key
-    const DEFAULT_CITY = "New Delhi";      // Fixed city for version 1
+    // Simulated weather data generator
+    const conditions = ["Sunny ☀️", "Cloudy ☁️", "Rainy 🌧️", "Stormy ⛈️", "Windy 🌬️", "Hazy 🌫️"];
 
-    // Load default city on page load
-    window.onload = () => getWeather(DEFAULT_CITY);
-
-    // Fetch weather for city
-    async function getWeather(cityName) {
-      const city = cityName || document.getElementById("cityInput").value || DEFAULT_CITY;
-      const currentURL = `https://api.openweathermap.org/data/2.5/weather?q=${city},IN&units=metric&appid=${API_KEY}`;
-      const forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${city},IN&units=metric&appid=${API_KEY}`;
-
-      try {
-        // Current weather
-        const currentRes = await fetch(currentURL);
-        const currentData = await currentRes.json();
-
-        document.getElementById("cityName").textContent = currentData.name;
-        document.getElementById("temperature").textContent = `${currentData.main.temp} °C`;
-        document.getElementById("description").textContent = currentData.weather[0].description;
-
-        // Forecast data
-        const forecastRes = await fetch(forecastURL);
-        const forecastData = await forecastRes.json();
-        displayForecast(forecastData.list);
-      } catch (err) {
-        alert("Error fetching weather data. Check your API key or city name.");
-        console.error(err);
-      }
+    function getRandomTemp() {
+      return (Math.random() * (40 - 15) + 15).toFixed(1); // 15°C - 40°C
     }
 
-    // Display 5-day forecast (12:00:00 each day)
-    function displayForecast(list) {
+    function getRandomCondition() {
+      return conditions[Math.floor(Math.random() * conditions.length)];
+    }
+
+    function showWeather() {
+      const city = document.getElementById("cityInput").value.trim() || "New Delhi";
+      document.getElementById("cityName").textContent = city;
+
+      // Generate random current temperature and condition
+      const temp = getRandomTemp();
+      const condition = getRandomCondition();
+      document.getElementById("temperature").textContent = `${temp} °C`;
+      document.getElementById("description").textContent = condition;
+
+      // Generate 5-day fake forecast
       const forecastDiv = document.getElementById("forecast");
       forecastDiv.innerHTML = "";
-      const daily = list.filter(item => item.dt_txt.includes("12:00:00"));
+      const today = new Date();
 
-      daily.slice(0, 5).forEach(day => {
-        const date = new Date(day.dt * 1000);
-        const element = document.createElement("div");
-        element.className = "day";
-        element.innerHTML = `
+      for (let i = 1; i <= 5; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+
+        const dayElement = document.createElement("div");
+        dayElement.className = "day";
+        dayElement.innerHTML = `
           <strong>${date.toDateString().slice(0, 10)}</strong><br>
-          🌡️ ${day.main.temp}°C<br>
-          ☁️ ${day.weather[0].main}
+          🌡️ ${getRandomTemp()}°C<br>
+          ${getRandomCondition()}
         `;
-        forecastDiv.appendChild(element);
-      });
-    }
-
-    // JS Test Functions
-    function runTests() {
-      const out = document.getElementById("testResults");
-      out.textContent = "";
-
-      function cToF(c) { return (c * 9/5) + 32; }
-      function fToC(f) { return (f - 32) * 5/9; }
-
-      try {
-        out.textContent += "Temperature Conversion Tests:\n";
-        out.textContent += `25°C → ${cToF(25).toFixed(2)}°F\n`;
-        out.textContent += `77°F → ${fToC(77).toFixed(2)}°C\n`;
-
-        out.textContent += "\nAPI URL Tests:\n";
-        const testCity = "Mumbai";
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${testCity},IN&units=metric&appid=${API_KEY}`;
-        out.textContent += `API URL generated correctly: ${url}\n✅ All tests passed.`;
-      } catch (e) {
-        out.textContent += "❌ Error in tests: " + e.message;
+        forecastDiv.appendChild(dayElement);
       }
     }
-  </script>
 
+    // Show default weather on load
+    window.onload = showWeather;
+  </script>
 </body>
 </html>
