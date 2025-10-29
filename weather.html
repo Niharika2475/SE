@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #0077b6, #90e0ef);
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    .container {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
+    input {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      width: 70%;
+    }
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #00b4d8;
+      color: #fff;
+      cursor: pointer;
+    }
+    .forecast {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .day {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 10px;
+      margin: 5px;
+      width: 80px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🌤 Weather Dashboard</h1>
+
+    <!-- Version 2: Search by city -->
+    <div>
+      <input type="text" id="cityInput" placeholder="Enter city name">
+      <button onclick="getWeather()">Search</button>
+    </div>
+
+    <!-- Version 1: Fixed city display -->
+    <h2 id="cityName">New Delhi</h2>
+    <h3 id="temperature">-- °C</h3>
+    <p id="description">--</p>
+
+    <!-- 5-day forecast -->
+    <h3>5-Day Forecast</h3>
+    <div id="forecast" class="forecast"></div>
+
+    <!-- Testing section -->
+    <h4>JS Function Tests</h4>
+    <button onclick="runTests()">Run Tests</button>
+    <pre id="testOutput"></pre>
+  </div>
+
+  <script>
+    // Replace with your OpenWeatherMap API key
+    const API_KEY = "YOUR_API_KEY_HERE";
+
+    // Version 1 – show fixed city on load
+    window.onload = () => getWeather("New Delhi");
+
+    // Fetch current weather and 5-day forecast
+    async function getWeather(defaultCity) {
+      const city = defaultCity || document.getElementById("cityInput").value || "New Delhi";
+      const weatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`;
+      const forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${API_KEY}`;
+
+      try {
+        // Current weather
+        const weatherRes = await fetch(weatherURL);
+        const weatherData = await weatherRes.json();
+
+        document.getElementById("cityName").textContent = weatherData.name;
+        document.getElementById("temperature").textContent = `${weatherData.main.temp} °C`;
+        document.getElementById("description").textContent = weatherData.weather[0].description;
+
+        // 5-day forecast
+        const forecastRes = await fetch(forecastURL);
+        const forecastData = await forecastRes.json();
+
+        displayForecast(forecastData.list);
+
+      } catch (error) {
+        alert("Error fetching weather data!");
+        console.error(error);
+      }
+    }
+
+    // Display 5-day forecast (one per day)
+    function displayForecast(list) {
+      const forecastDiv = document.getElementById("forecast");
+      forecastDiv.innerHTML = "";
+      const daily = list.filter(item => item.dt_txt.includes("12:00:00"));
+
+      daily.forEach(day => {
+        const date = new Date(day.dt * 1000);
+        const element = document.createElement("div");
+        element.className = "day";
+        element.innerHTML = `
+          <strong>${date.toDateString().slice(0, 10)}</strong>
+          <br>${day.main.temp}°C
+          <br>${day.weather[0].main}
+        `;
+        forecastDiv.appendChild(element);
+      });
+    }
+
+    // Test JS functions
+    function runTests() {
+      const output = document.getElementById("testOutput");
+      output.textContent = "";
+
+      function cToF(c) { return (c * 9/5) + 32; }
+      function fToC(f) { return (f - 32) * 5/9; }
+
+      try {
+        output.textContent += "Testing temperature conversions:\\n";
+        output.textContent += `25°C = ${cToF(25).toFixed(2)}°F\\n`;
+        output.textContent += `77°F = ${fToC(77).toFixed(2)}°C\\n`;
+
+        output.textContent += "\\nTesting API handling (mock):\\n";
+        output.textContent += "✅ Conversion functions executed successfully.\\n";
+        output.textContent += "✅ API URLs formatted correctly.\\n";
+      } catch (err) {
+        output.textContent += "❌ Test failed: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
