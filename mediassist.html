@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediAssist - Rural Healthcare Information Portal</title>
+    <style>
+        :root {
+            --color-primary: #2563eb;
+            --color-primary-hover: #1d4ed8;
+            --color-success: #10b981;
+            --color-white: #ffffff;
+            --color-gray-50: #f9fafb;
+            --color-gray-100: #f3f4f6;
+            --color-gray-200: #e5e7eb;
+            --color-gray-600: #4b5563;
+            --color-gray-700: #374151;
+            --color-gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--color-gray-900);
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.85) 0%, rgba(16, 185, 129, 0.85) 100%),
+                        url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1920&q=80') center/cover no-repeat fixed;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--color-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-white);
+            font-size: 1.8rem;
+            overflow: hidden;
+        }
+
+        .header-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .doctor-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 3px solid var(--color-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-header-with-image {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .doctor-info-text {
+            flex: 1;
+        }
+
+        .header p {
+            color: var(--color-gray-600);
+            font-size: 1.1rem;
+        }
+
+        .subtitle {
+            color: var(--color-gray-600);
+            margin-top: 8px;
+            font-size: 0.95rem;
+        }
+
+        /* Search Bar */
+        .search-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid var(--color-gray-200);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-btn {
+            padding: 14px 30px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: var(--color-gray-100);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            background: var(--color-gray-200);
+        }
+
+        .filter-btn.active {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+
+        /* Info Cards Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--color-primary);
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .doctor-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--color-gray-900);
+            margin-bottom: 5px;
+        }
+
+        .specialty-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--color-primary);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-open {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--color-success);
+        }
+
+        .status-closed {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .card-details {
+            margin: 15px 0;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            color: var(--color-gray-700);
+            font-size: 0.95rem;
+        }
+
+        .detail-icon {
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .timing-section {
+            background: var(--color-gray-50);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .timing-title {
+            font-weight: 600;
+            color: var(--color-gray-900);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .timing-text {
+            color: var(--color-gray-600);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .contact-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--color-success);
+            color: var(--color-white);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .contact-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .location-btn {
+            padding: 6px 14px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .location-btn:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .location-map-container {
+            display: none;
+            margin-top: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--color-gray-200);
+            animation: slideDown 0.3s ease;
+        }
+
+        .location-map-container.show {
+            display: block;
+        }
+
+        .location-map-container iframe {
+            width: 100%;
+            height: 250px;
+            border: none;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 300px;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--color-white);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-gray-900);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--color-gray-600);
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: var(--color-gray-100);
+            color: var(--color-gray-900);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--color-gray-900);
+            font-size: 0.95rem;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--color-gray-200);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid var(--color-success);
+            color: var(--color-success);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Appointment Confirmation Modal */
+        .confirmation-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .confirmation-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confirmation-content {
+            background: var(--color-white);
+            border-radius: 20px;
+            padding: 35px;
+            max-width: 550px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+            position: relative;
+        }
+
+        .confirmation-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--color-success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 3rem;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .confirmation-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-gray-900);
+            margin-bottom: 10px;
+        }
+
+        .confirmation-subtitle {
+            color: var(--color-gray-600);
+            font-size: 1rem;
+        }
+
+        .appointment-details {
+            background: var(--color-gray-50);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--color-gray-200);
+        }
+
+        .detail-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .detail-item-icon {
+            font-size: 1.3rem;
+            min-width: 24px;
+        }
+
+        .detail-item-content {
+            flex: 1;
+        }
+
+        .detail-item-label {
+            font-size: 0.85rem;
+            color: var(--color-gray-600);
+            margin-bottom: 3px;
+        }
+
+        .detail-item-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-gray-900);
+        }
+
+        .map-section {
+            margin: 20px 0;
+        }
+
+        .map-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-gray-900);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--color-gray-200);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .confirmation-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-close-confirm {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .btn-close-confirm:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-directions {
+            background: var(--color-success);
+            color: var(--color-white);
+        }
+
+        .btn-directions:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .map-container {
+                height: 250px;
+            }
+
+            .confirmation-content {
+                padding: 25px;
+            }
+
+            .success-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 2.5rem;
+            }
+
+            .confirmation-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (orientation: landscape) and (max-height: 600px) {
+            .confirmation-content {
+                max-height: 95vh;
+                padding: 20px;
+            }
+
+            .map-container {
+                height: 200px;
+            }
+
+            .success-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
+                margin-bottom: 15px;
+            }
+
+            .confirmation-title {
+                font-size: 1.4rem;
+            }
+
+            .appointment-details {
+                padding: 15px;
+            }
+        }
+
+        /* Emergency Section */
+        .emergency-section {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: var(--color-white);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 30px;
+        }
+
+        .emergency-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .emergency-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 15px 0;
+            letter-spacing: 2px;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            color: var(--color-gray-600);
+        }
+
+        .no-results {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            color: var(--color-gray-600);
+            display: none;
+        }
+
+        .no-results.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-card {
+            animation: fadeIn 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <span class="header-icon">
+                    <img src="https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=100&h=100&fit=crop" alt="Medical Logo">
+                </span>
+                MediAssist
+            </h1>
+            <p>Rural Healthcare Information Portal - Telangana</p>
+            <p class="subtitle">Find doctors, specialties, and clinic timings in your area</p>
+            <div style="margin-top: 20px;">
+                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=200&fit=crop" alt="Medical Team" style="width: 100%; max-width: 600px; height: 150px; object-fit: cover; border-radius: 12px; box-shadow: var(--shadow-md);">
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search by doctor name, specialty, or location...">
+                <button class="search-btn" onclick="searchDoctors()">🔍 Search</button>
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterSpecialty('all')">All Specialties</button>
+                <button class="filter-btn" onclick="filterSpecialty('general')">General Medicine</button>
+                <button class="filter-btn" onclick="filterSpecialty('pediatrics')">Pediatrics</button>
+                <button class="filter-btn" onclick="filterSpecialty('gynecology')">Gynecology</button>
+                <button class="filter-btn" onclick="filterSpecialty('dentistry')">Dentistry</button>
+            </div>
+        </div>
+
+        <!-- Emergency Section -->
+        <div class="emergency-section">
+            <h2>🚨 Emergency Services</h2>
+            <p>For medical emergencies, call:</p>
+            <div class="emergency-number">108</div>
+            <p>24/7 Ambulance Service Available</p>
+        </div>
+
+        <!-- Doctors Grid -->
+        <div class="info-grid" id="doctorsGrid">
+            <!-- Doctor Card 1 -->
+            <div class="info-card" data-specialty="general">
+                <div class="card-header-with-image">
+                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop" alt="Dr. Rajesh Kumar" class="doctor-image">
+                    <div class="doctor-info-text">
+                        <div class="card-header">
+                            <div>
+                                <div class="doctor-name">Dr. Rajesh Kumar</div>
+                                <span class="specialty-badge">General Medicine</span>
+                            </div>
+                            <span class="status-badge status-open">Open</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-row">
+                        <span class="detail-icon">📍</span>
+                        <span>Primary Health Center, Warangal Rural</span>
+                        <button class="location-btn" onclick="showLocationMap('Primary Health Center, Warangal Rural', event)">View on Map</button>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">📞</span>
+                        <span>+91 9876543210</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">🎓</span>
+                        <span>MBBS, MD - 15 years experience</span>
+                    </div>
+                </div>
+                <div class="timing-section">
+                    <div class="timing-title">⏰ Clinic Timings</div>
+                    <div class="timing-text">
+                        Monday - Saturday: 9:00 AM - 2:00 PM, 5:00 PM - 8:00 PM<br>
+                        Sunday: 9:00 AM - 1:00 PM
+                    </div>
+                </div>
+                <button class="contact-btn" onclick="openAppointmentModal('Dr. Rajesh Kumar', 'General Medicine', 'Primary Health Center, Warangal Rural')">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor Card 2 -->
+            <div class="info-card" data-specialty="pediatrics">
+                <div class="card-header-with-image">
+                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop" alt="Dr. Swathi Reddy" class="doctor-image">
+                    <div class="doctor-info-text">
+                        <div class="card-header">
+                            <div>
+                                <div class="doctor-name">Dr. Swathi Reddy</div>
+                                <span class="specialty-badge">Pediatrics</span>
+                            </div>
+                            <span class="status-badge status-open">Open</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-row">
+                        <span class="detail-icon">📍</span>
+                        <span>Children's Clinic, Khammam</span>
+                        <button class="location-btn" onclick="showLocationMap('Children\'s Clinic, Khammam', event)">View on Map</button>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">📞</span>
+                        <span>+91 9876543211</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">🎓</span>
+                        <span>MBBS, DCH - 10 years experience</span>
+                    </div>
+                </div>
+                <div class="timing-section">
+                    <div class="timing-title">⏰ Clinic Timings</div>
+                    <div class="timing-text">
+                        Monday - Friday: 10:00 AM - 1:00 PM, 4:00 PM - 7:00 PM<br>
+                        Saturday: 10:00 AM - 2:00 PM
+                    </div>
+                </div>
+                <button class="contact-btn" onclick="openAppointmentModal('Dr. Swathi Reddy', 'Pediatrics', 'Children\'s Clinic, Khammam')">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor Card 3 -->
+            <div class="info-card" data-specialty="gynecology">
+                <div class="card-header-with-image">
+                    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=200&h=200&fit=crop" alt="Dr. Lakshmi Devi" class="doctor-image">
+                    <div class="doctor-info-text">
+                        <div class="card-header">
+                            <div>
+                                <div class="doctor-name">Dr. Lakshmi Devi</div>
+                                <span class="specialty-badge">Gynecology</span>
+                            </div>
+                            <span class="status-badge status-open">Open</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-row">
+                        <span class="detail-icon">📍</span>
+                        <span>Women's Health Center, Nizamabad</span>
+                        <button class="location-btn" onclick="showLocationMap('Women\'s Health Center, Nizamabad', event)">View on Map</button>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">📞</span>
+                        <span>+91 9876543212</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">🎓</span>
+                        <span>MBBS, DGO - 12 years experience</span>
+                    </div>
+                </div>
+                <div class="timing-section">
+                    <div class="timing-title">⏰ Clinic Timings</div>
+                    <div class="timing-text">
+                        Monday - Saturday: 9:30 AM - 1:30 PM, 5:30 PM - 8:30 PM<br>
+                        Sunday: Closed
+                    </div>
+                </div>
+                <button class="contact-btn" onclick="openAppointmentModal('Dr. Lakshmi Devi', 'Gynecology', 'Women\'s Health Center, Nizamabad')">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor Card 4 -->
+            <div class="info-card" data-specialty="dentistry">
+                <div class="card-header-with-image">
+                    <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=200&h=200&fit=crop" alt="Dr. Anil Sharma" class="doctor-image">
+                    <div class="doctor-info-text">
+                        <div class="card-header">
+                            <div>
+                                <div class="doctor-name">Dr. Anil Sharma</div>
+                                <span class="specialty-badge">Dentistry</span>
+                            </div>
+                            <span class="status-badge status-closed">Closed</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-row">
+                        <span class="detail-icon">📍</span>
+                        <span>Dental Care Clinic, Karimnagar</span>
+                        <button class="location-btn" onclick="showLocationMap('Dental Care Clinic, Karimnagar', event)">View on Map</button>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">📞</span>
+                        <span>+91 9876543213</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">🎓</span>
+                        <span>BDS, MDS - 8 years experience</span>
+                    </div>
+                </div>
+                <div class="timing-section">
+                    <div class="timing-title">⏰ Clinic Timings</div>
+                    <div class="timing-text">
+                        Monday - Friday: 10:00 AM - 1:00 PM, 3:00 PM - 7:00 PM<br>
+                        Saturday-Sunday: Closed
+                    </div>
+                </div>
+                <button class="contact-btn" onclick="openAppointmentModal('Dr. Anil Sharma', 'Dentistry', 'Dental Care Clinic, Karimnagar')">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor Card 5 -->
+            <div class="info-card" data-specialty="general">
+                <div class="card-header-with-image">
+                    <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=200&h=200&fit=crop" alt="Dr. Priya Sharma" class="doctor-image">
+                    <div class="doctor-info-text">
+                        <div class="card-header">
+                            <div>
+                                <div class="doctor-name">Dr. Priya Sharma</div>
+                                <span class="specialty-badge">General Medicine</span>
+                            </div>
+                            <span class="status-badge status-open">Open</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-row">
+                        <span class="detail-icon">📍</span>
+                        <span>Community Health Center, Adilabad</span>
+                        <button class="location-btn" onclick="showLocationMap('Community Health Center, Adilabad', event)">View on Map</button>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">📞</span>
+                        <span>+91 9876543214</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">🎓</span>
+                        <span>MBBS - 7 years experience</span>
+                    </div>
+                </div>
+                <div class="timing-section">
+                    <div class="timing-title">⏰ Clinic Timings</div>
+                    <div class="timing-text">
+                        Monday - Saturday: 8:00 AM - 2:00 PM<br>
+                        Sunday: 9:00 AM - 12:00 PM
+                    </div>
+                </div>
+                <button class="contact-btn" onclick="openAppointmentModal('Dr. Priya Sharma', 'General Medicine', 'Community Health Center, Adilabad')">📅 Book Appointment</button>
+            </div>
+
+            <!-- Doctor Card 6 -->
+            <div class="info-card" data-specialty="pediatrics">
+                <div class="card-header-with-image">
+                    <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=200&h=200&fit=crop" alt="Dr. Venkat Rao" class="doctor-image">
+                    <div class="doctor-info-text">
+                        <div class="card-header">
+                            <div>
+                                <div class="doctor-name">Dr. Venkat Rao</div>
+                                <span class="specialty-badge">Pediatrics</span>
+                            </div>
+                            <span class="status-badge status-open">Open</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-row">
+                        <span class="detail-icon">📍</span>
+                        <span>Rainbow Children's Clinic, Medak</span>
+                        <button class="location-btn" onclick="showLocationMap('Rainbow Children\'s Clinic, Medak', event)">View on Map</button>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">📞</span>
+                        <span>+91 9876543215</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">🎓</span>
+                        <span>MBBS, MD Pediatrics - 14 years experience</span>
+                    </div>
+                </div>
+                <div class="timing-section">
+                    <div class="timing-title">⏰ Clinic Timings</div>
+                    <div class="timing-text">
+                        Monday - Saturday: 9:00 AM - 1:00 PM, 5:00 PM - 8:00 PM<br>
+                        Sunday: Emergency only
+                    </div>
+                </div>
+                <button class="contact-btn" onclick="openAppointmentModal('Dr. Venkat Rao', 'Pediatrics', 'Rainbow Children\'s Clinic, Medak')">📅 Book Appointment</button>
+            </div>
+        </div>
+
+        <div class="no-results" id="noResults">
+            <h2>No Results Found</h2>
+            <p>Try adjusting your search or filter criteria</p>
+        </div>
+
+        <!-- Appointment Confirmation Modal -->
+        <div class="confirmation-modal" id="confirmationModal">
+            <div class="confirmation-content">
+                <div class="confirmation-header">
+                    <div class="success-icon">✓</div>
+                    <h2 class="confirmation-title">Appointment Confirmed!</h2>
+                    <p class="confirmation-subtitle">Your appointment has been successfully booked</p>
+                </div>
+
+                <div class="appointment-details" id="confirmedDetails">
+                    <!-- Details will be populated by JavaScript -->
+                </div>
+
+                <div class="map-section">
+                    <div class="map-title">📍 Clinic Location</div>
+                    <div class="map-container" id="mapContainer">
+                        <!-- Map will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="confirmation-actions">
+                    <button class="action-btn btn-close-confirm" onclick="closeConfirmationModal()">Done</button>
+                    <button class="action-btn btn-directions" onclick="openDirections()">Get Directions</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointment Modal -->
+        <div class="modal" id="appointmentModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Book Appointment</h2>
+                    <button class="close-btn" onclick="closeAppointmentModal()">&times;</button>
+                </div>
+                
+                <div class="success-message" id="successMessage">
+                    ✅ Appointment booked successfully! We'll contact you soon.
+                </div>
+
+                <form id="appointmentForm" onsubmit="submitAppointment(event)">
+                    <div class="form-group">
+                        <label class="form-label">Doctor</label>
+                        <input type="text" class="form-input" id="doctorName" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Specialty</label>
+                        <input type="text" class="form-input" id="specialty" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-input" id="location" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Your Name *</label>
+                        <input type="text" class="form-input" id="patientName" required placeholder="Enter your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Phone Number *</label>
+                        <input type="tel" class="form-input" id="phoneNumber" required placeholder="Enter your phone number" pattern="[0-9]{10}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Age *</label>
+                        <input type="number" class="form-input" id="age" required placeholder="Enter your age" min="1" max="120">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Preferred Date *</label>
+                        <input type="date" class="form-input" id="appointmentDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Preferred Time *</label>
+                        <select class="form-select" id="appointmentTime" required>
+                            <option value="">Select time slot</option>
+                            <option value="09:00">09:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="14:00">02:00 PM</option>
+                            <option value="15:00">03:00 PM</option>
+                            <option value="16:00">04:00 PM</option>
+                            <option value="17:00">05:00 PM</option>
+                            <option value="18:00">06:00 PM</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Reason for Visit</label>
+                        <textarea class="form-textarea" id="reason" placeholder="Briefly describe your symptoms or reason for visit (optional)"></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Confirm Appointment</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>MediAssist</strong> - Connecting Rural Communities to Healthcare</p>
+            <p>For any queries or to add your clinic information, contact: info@mediassist.org</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">© 2025 MediAssist. Serving Rural Telangana.</p>
+        </div>
+    </div>
+
+    <script>
+        // Search functionality
+        function searchDoctors() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.info-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('noResults').classList.toggle('show', visibleCount === 0);
+        }
+
+        // Real-time search
+        document.getElementById('searchInput').addEventListener('input', searchDoctors);
+
+        // Filter by specialty
+        function filterSpecialty(specialty) {
+            const cards = document.querySelectorAll('.info-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            let visibleCount = 0;
+
+            // Update button states
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter cards
+            cards.forEach(card => {
+                if (specialty === 'all' || card.dataset.specialty === specialty) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('noResults').classList.toggle('show', visibleCount === 0);
+        }
+
+        // Update clinic status based on current time
+        function updateClinicStatus() {
+            const now = new Date();
+            const hour = now.getHours();
+            const day = now.getDay();
+
+            document.querySelectorAll('.info-card').forEach(card => {
+                const statusBadge = card.querySelector('.status-badge');
+                // Simple logic: open if between 8 AM and 8 PM on weekdays
+                if (day >= 1 && day <= 6 && hour >= 8 && hour < 20) {
+                    statusBadge.textContent = 'Open';
+                    statusBadge.classList.remove('status-closed');
+                    statusBadge.classList.add('status-open');
+                } else {
+                    statusBadge.textContent = 'Closed';
+                    statusBadge.classList.remove('status-open');
+                    statusBadge.classList.add('status-closed');
+                }
+            });
+        }
+
+        // Initialize on page load
+        updateClinicStatus();
+        setInterval(updateClinicStatus, 60000); // Update every minute
+
+        // Appointment modal functions
+        function openAppointmentModal(doctorName, specialty, location) {
+            document.getElementById('doctorName').value = doctorName;
+            document.getElementById('specialty').value = specialty;
+            document.getElementById('location').value = location;
+            document.getElementById('appointmentModal').classList.add('show');
+            document.getElementById('successMessage').classList.remove('show');
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointmentDate').setAttribute('min', today);
+        }
+
+        function closeAppointmentModal() {
+            document.getElementById('appointmentModal').classList.remove('show');
+            document.getElementById('appointmentForm').reset();
+        }
+
+        // Store current appointment data
+        let currentAppointmentData = {};
+
+        function submitAppointment(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const formData = {
+                doctor: document.getElementById('doctorName').value,
+                specialty: document.getElementById('specialty').value,
+                location: document.getElementById('location').value,
+                patientName: document.getElementById('patientName').value,
+                phone: document.getElementById('phoneNumber').value,
+                age: document.getElementById('age').value,
+                date: document.getElementById('appointmentDate').value,
+                time: document.getElementById('appointmentTime').value,
+                reason: document.getElementById('reason').value
+            };
+
+            // Store appointment data
+            currentAppointmentData = formData;
+
+            // In a real application, this would send data to a server
+            console.log('Appointment booked:', formData);
+
+            // Close appointment form modal
+            closeAppointmentModal();
+
+            // Show confirmation modal with details
+            showConfirmationModal(formData);
+        }
+
+        function showConfirmationModal(data) {
+            // Format date
+            const date = new Date(data.date);
+            const formattedDate = date.toLocaleDateString('en-IN', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+
+            // Format time
+            const time = data.time;
+            const [hours, minutes] = time.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour % 12 || 12;
+            const formattedTime = `${displayHour}:${minutes} ${ampm}`;
+
+            // Populate appointment details
+            const detailsHTML = `
+                <div class="detail-item">
+                    <div class="detail-item-icon">👨‍⚕️</div>
+                    <div class="detail-item-content">
+                        <div class="detail-item-label">Doctor</div>
+                        <div class="detail-item-value">${data.doctor}</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-item-icon">🏥</div>
+                    <div class="detail-item-content">
+                        <div class="detail-item-label">Specialty</div>
+                        <div class="detail-item-value">${data.specialty}</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-item-icon">👤</div>
+                    <div class="detail-item-content">
+                        <div class="detail-item-label">Patient Name</div>
+                        <div class="detail-item-value">${data.patientName}</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-item-icon">📞</div>
+                    <div class="detail-item-content">
+                        <div class="detail-item-label">Contact Number</div>
+                        <div class="detail-item-value">${data.phone}</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-item-icon">📅</div>
+                    <div class="detail-item-content">
+                        <div class="detail-item-label">Appointment Date & Time</div>
+                        <div class="detail-item-value">${formattedDate} at ${formattedTime}</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-item-icon">📍</div>
+                    <div class="detail-item-content">
+                        <div class="detail-item-label">Clinic Location</div>
+                        <div class="detail-item-value">${data.location}</div>
+                    </div>
+                </div>
+                ${data.reason ? `
+                <div class="detail-item">
+                    <div class="detail-item-icon">📝</div>
+                    <div class="detail-item-content">
+                        <div class="detail-item-label">Reason for Visit</div>
+                        <div class="detail-item-value">${data.reason}</div>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+
+            document.getElementById('confirmedDetails').innerHTML = detailsHTML;
+
+            // Generate map based on location
+            const mapHTML = getMapForLocation(data.location);
+            document.getElementById('mapContainer').innerHTML = mapHTML;
+
+            // Show confirmation modal
+            document.getElementById('confirmationModal').classList.add('show');
+        }
+
+        function getMapForLocation(location) {
+            // Map different locations to their Google Maps embed URLs
+            const locationMaps = {
+                'Primary Health Center, Warangal Rural': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30531.234!2d79.5941!3d17.9784!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a334f2d0f7b1111%3A0x1234567890abcdef!2sWarangal%2C%20Telangana!5e0!3m2!1sen!2sin!4v1234567890',
+                'Children\'s Clinic, Khammam': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30531.234!2d80.1514!3d17.2473!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a334f2d0f7b2222%3A0x1234567890abcdef!2sKhammam%2C%20Telangana!5e0!3m2!1sen!2sin!4v1234567890',
+                'Women\'s Health Center, Nizamabad': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30531.234!2d78.0938!3d18.6725!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a334f2d0f7b3333%3A0x1234567890abcdef!2sNizamabad%2C%20Telangana!5e0!3m2!1sen!2sin!4v1234567890',
+                'Dental Care Clinic, Karimnagar': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30531.234!2d79.1288!3d18.4386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a334f2d0f7b4444%3A0x1234567890abcdef!2sKarimnagar%2C%20Telangana!5e0!3m2!1sen!2sin!4v1234567890',
+                'Community Health Center, Adilabad': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30531.234!2d78.5314!3d19.6642!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a334f2d0f7b5555%3A0x1234567890abcdef!2sAdilabad%2C%20Telangana!5e0!3m2!1sen!2sin!4v1234567890',
+                'Rainbow Children\'s Clinic, Medak': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30531.234!2d78.2647!3d18.0488!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a334f2d0f7b6666%3A0x1234567890abcdef!2sMedak%2C%20Telangana!5e0!3m2!1sen!2sin!4v1234567890'
+            };
+
+            const mapUrl = locationMaps[location] || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30531.234!2d78.4867!3d17.3850!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb99daeaebd2c7%3A0xae93b78392bafbc2!2sTelangana!5e0!3m2!1sen!2sin!4v1234567890';
+
+            return `<iframe src="${mapUrl}" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+        }
+
+        function closeConfirmationModal() {
+            document.getElementById('confirmationModal').classList.remove('show');
+        }
+
+        function openDirections() {
+            const location = currentAppointmentData.location;
+            // Open Google Maps with the location
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+            window.open(mapsUrl, '_blank');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('appointmentModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeAppointmentModal();
+            }
+        });
+
+        // Close confirmation modal when clicking outside
+        document.getElementById('confirmationModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeConfirmationModal();
+            }
+        });
+
+        // Show location map in doctor card
+        function showLocationMap(location, event) {
+            event.stopPropagation();
+            
+            // Find the card containing this button
+            const card = event.target.closest('.info-card');
+            
+            // Check if map container already exists
+            let mapContainer = card.querySelector('.location-map-container');
+            
+            if (mapContainer) {
+                // Toggle visibility
+                mapContainer.classList.toggle('show');
+            } else {
+                // Create new map container
+                mapContainer = document.createElement('div');
+                mapContainer.className = 'location-map-container show';
+                
+                const mapHTML = getMapForLocation(location);
+                mapContainer.innerHTML = mapHTML;
+                
+                // Insert after card-details
+                const cardDetails = card.querySelector('.card-details');
+                cardDetails.parentNode.insertBefore(mapContainer, cardDetails.nextSibling);
+            }
+        }
+    </script>
+</body>
+</html>
+
